@@ -10,12 +10,13 @@ import {
   Controller,
 } from '@nestjs/common'
 import { Response } from 'express'
-import { ApiTags } from '@nestjs/swagger'
 import { CardService } from './card.service'
 import { CardParamDTO } from './dto/card.dto'
 import { JwtAuthGuard } from 'src/jwt/jwt-auth.guard'
+import { ApiTags, ApiBearerAuth } from '@nestjs/swagger'
 
 @ApiTags("Card")
+@ApiBearerAuth()
 @Controller('card')
 @UseGuards(JwtAuthGuard)
 export class CardController {
