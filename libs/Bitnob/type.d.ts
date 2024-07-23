@@ -66,3 +66,24 @@ interface CardResponse {
     message: string
     data: CardData
 }
+
+interface VirtualCardEvent {
+    event: 'virtualcard.transaction.declined.terminated' | 'virtualcard.created.success'
+    data: VirtualCardTerminationData | VirtualCardSuccessData
+}
+
+interface VirtualCardTerminationData {
+    cardId: string
+    reason: string
+    companyId: string
+    reference: string
+    balanceBeforeTermination: number
+}
+
+interface VirtualCardSuccessData {
+    id: string
+    status: string
+    companyId: string
+    reference: string
+    createdStatus: string
+}

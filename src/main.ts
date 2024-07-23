@@ -14,6 +14,7 @@ async function bootstrap() {
       'http://localhost:3000',
       'http://localhost:5173',
       `http://localhost:${PORT}`,
+      'https://b2b-assessment.up.railway.app',
     ],
     credentials: true,
     optionsSuccessStatus: 200,
@@ -27,6 +28,7 @@ async function bootstrap() {
   const swaggerOptions = new DocumentBuilder()
     .setTitle('B2B API')
     .setVersion('1.0')
+    .addServer(`https://b2b-assessment.up.railway.app`, 'Staging')
     .addServer(`http://localhost:${PORT}`, 'Local')
     .addBearerAuth()
     .build()

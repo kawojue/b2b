@@ -1,7 +1,7 @@
 import { ApiProperty } from "@nestjs/swagger"
 import { Transform } from "class-transformer"
 import { titleText } from "helpers/transformer"
-import { IsNotEmpty, IsOptional, IsString, MaxLength } from "class-validator"
+import { IsNotEmpty, IsString, MaxLength } from "class-validator"
 
 export class RegisterBusinessDTO {
     @ApiProperty({
