@@ -1,16 +1,18 @@
+import { IsOptional } from "class-validator"
 import { ApiProperty } from "@nestjs/swagger"
 import { Transform } from "class-transformer"
-import { IsOptional } from "class-validator"
 
 class PaginationBaseDTO {
     @ApiProperty({
-        example: 1
+        example: 1,
+        required: false,
     })
     @IsOptional()
     page?: number
 
     @ApiProperty({
-        example: 72
+        example: 72,
+        required: false,
     })
     @IsOptional()
     limit?: number
@@ -18,7 +20,8 @@ class PaginationBaseDTO {
 
 export class InfiniteScrollDTO extends PaginationBaseDTO {
     @ApiProperty({
-        example: ' '
+        example: ' ',
+        required: false,
     })
     @IsOptional()
     @Transform(({ value }) => value?.trim())
@@ -27,12 +30,14 @@ export class InfiniteScrollDTO extends PaginationBaseDTO {
     @ApiProperty({
         example: '2024-07-22T00:00:00.000Z',
         default: 0,
+        required: false,
     })
     @IsOptional()
     startDate?: string
 
     @ApiProperty({
-        example: new Date()
+        example: new Date(),
+        required: false,
     })
     @IsOptional()
     endDate?: string
