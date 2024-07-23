@@ -2,8 +2,9 @@ import { Response } from 'express'
 import { Injectable } from '@nestjs/common'
 import { StatusCodes } from 'enums/statusCodes'
 import { PrismaService } from 'prisma/prisma.service'
+import { RegisterBusinessDTO } from './dto/index.dto'
 import { ResponseService } from 'libs/response.service'
-import { InfiniteScrollDTO, RegisterBusinessDTO } from './dto/index.dto'
+import { InfiniteScrollDTO } from 'src/app/dto/pagination.dto'
 
 @Injectable()
 export class BusinessService {

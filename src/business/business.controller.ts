@@ -11,8 +11,9 @@ import {
 import { Response } from 'express'
 import { BusinessService } from './business.service'
 import { JwtAuthGuard } from 'src/jwt/jwt-auth.guard'
+import { RegisterBusinessDTO } from './dto/index.dto'
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger'
-import { InfiniteScrollDTO, RegisterBusinessDTO } from './dto/index.dto'
+import { InfiniteScrollDTO } from 'src/app/dto/pagination.dto'
 
 @ApiBearerAuth()
 @ApiTags("Business")

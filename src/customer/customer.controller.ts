@@ -14,7 +14,7 @@ import { CustomerService } from './customer.service'
 import { JwtAuthGuard } from 'src/jwt/jwt-auth.guard'
 import { RegisterCustomerDTO } from './dto/index.dto'
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger'
-import { InfiniteScrollDTO } from 'src/business/dto/index.dto'
+import { InfiniteScrollDTO } from 'src/app/dto/pagination.dto'
 
 @ApiBearerAuth()
 @ApiTags('Customer')

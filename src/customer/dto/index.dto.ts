@@ -5,7 +5,7 @@ import { IsNotEmpty, IsString, MaxLength } from "class-validator"
 
 export class RegisterCustomerDTO {
     @ApiProperty({
-        example: 'Muyiwa'
+        example: 'Raheem'
     })
     @IsString()
     @IsNotEmpty()
@@ -14,7 +14,7 @@ export class RegisterCustomerDTO {
     firstname: string
 
     @ApiProperty({
-        example: 'Muyiwa'
+        example: 'Kawojue'
     })
     @IsString()
     @IsNotEmpty()

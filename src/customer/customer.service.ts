@@ -4,7 +4,7 @@ import { PrismaService } from 'prisma/prisma.service'
 import { RegisterCustomerDTO } from './dto/index.dto'
 import { ResponseService } from 'libs/response.service'
 import { Injectable, NotFoundException } from '@nestjs/common'
-import { InfiniteScrollDTO } from 'src/business/dto/index.dto'
+import { InfiniteScrollDTO } from 'src/app/dto/pagination.dto'
 
 @Injectable()
 export class CustomerService {

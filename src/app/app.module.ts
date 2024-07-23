@@ -3,12 +3,14 @@ import { JwtService } from '@nestjs/jwt'
 import { AppService } from './app.service'
 import { AppController } from './app.controller'
 import { AuthModule } from 'src/auth/auth.module'
+import { WebhookModule } from 'src/webhook/webhook.module'
 import { BusinessModule } from 'src/business/business.module'
 import { CustomerModule } from 'src/customer/customer.module'
 
 @Module({
   imports: [
     AuthModule,
+    WebhookModule,
     BusinessModule,
     CustomerModule,
   ],
