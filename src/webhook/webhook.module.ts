@@ -5,6 +5,7 @@ import { WebhookService } from './webhook.service'
 import { PrismaService } from 'prisma/prisma.service'
 import { ResponseService } from 'libs/response.service'
 import { WebhookController } from './webhook.controller'
+import { BitnobService } from 'libs/Bitnob/bitnob.service'
 
 @Module({
   imports: [HttpModule],
@@ -14,6 +15,7 @@ import { WebhookController } from './webhook.controller'
     ResponseService,
     PrismaService,
     JwtService,
+    BitnobService,
   ],
 })
 export class WebhookModule { }
