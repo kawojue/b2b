@@ -38,7 +38,7 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
                 where: { id: decoded.sub }
             })
 
-            if (!user || !user.refresh_token) return false
+            if (!user) return false
 
             request.user = decoded
             return true
