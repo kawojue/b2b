@@ -5,6 +5,7 @@ import { StatusCodes } from 'enums/statusCodes'
 import { PrismaService } from 'prisma/prisma.service'
 import { ResponseService } from 'libs/response.service'
 import { BitnobService } from 'libs/Bitnob/bitnob.service'
+import { InfiniteScrollDTO } from 'src/app/dto/pagination.dto'
 
 @Injectable()
 export class CardService {
@@ -227,5 +228,85 @@ export class CardService {
         await this.bitnob.terminateCard({ cardId: card.cardId }) // a webhook will be sent automatically.
 
         this.response.sendSuccess(res, StatusCodes.OK, {})
+    }
+
+    async fetchCards(
+        res: Response,
+        businessId: string,
+        { sub }: ExpressUser,
+        {
+            page = 1,
+            limit = 50,
+            search = '',
+            endDate = '',
+            startDate = '',
+        }: InfiniteScrollDTO,
+    ) {
+        page = Number(page)
+        limit = Number(limit)
+
+        if (isNaN(page) || isNaN(limit) || page < 1 || limit < 1) {
+            return this.response.sendError(res, StatusCodes.BadRequest, "Invalid pagination query")
+        }
+
+        const offset = (page - 1) * limit
+
+        const dateFilter = {
+            gte: startDate !== '' ? new Date(startDate) : new Date(0),
+            lte: endDate !== '' ? new Date(endDate) : new Date(),
+        }
+
+        const [cards, total] = await this.prisma.$transaction([
+            this.prisma.card.findMany({
+                where: {
+                    createdAt: dateFilter,
+                    OR: [
+                        { customer: { email: { contains: search, mode: 'insensitive' } } },
+                        { customer: { firstname: { contains: search, mode: 'insensitive' } } },
+                    ],
+                    customer: {
+                        business: {
+                            ownerId: sub,
+                            id: businessId,
+                        }
+                    }
+                },
+                take: limit,
+                skip: offset,
+                orderBy: { createdAt: 'desc' },
+                include: { customer: true, }
+            }),
+            this.prisma.card.count({
+                where: {
+                    createdAt: dateFilter,
+                    OR: [
+                        { customer: { email: { contains: search, mode: 'insensitive' } } },
+                        { customer: { firstname: { contains: search, mode: 'insensitive' } } },
+                    ],
+                    customer: {
+                        business: {
+                            ownerId: sub,
+                            id: businessId,
+                        }
+                    }
+                },
+            })
+        ])
+
+        const totalPage = Math.ceil(total / limit)
+        const hasNext = page < totalPage
+        const hasPrev = page > 1
+
+        this.response.sendSuccess(res, StatusCodes.OK, {
+            data: cards,
+            metadata: {
+                page,
+                limit,
+                total,
+                totalPage,
+                hasNext,
+                hasPrev,
+            }
+        })
     }
 }

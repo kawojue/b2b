@@ -1,10 +1,12 @@
 import {
+  Get,
   Res,
   Req,
   Post,
   Body,
   Param,
   Patch,
+  Query,
   Delete,
   UseGuards,
   Controller,
@@ -14,6 +16,7 @@ import { CardService } from './card.service'
 import { CardParamDTO } from './dto/card.dto'
 import { JwtAuthGuard } from 'src/jwt/jwt-auth.guard'
 import { ApiTags, ApiBearerAuth } from '@nestjs/swagger'
+import { InfiniteScrollDTO } from 'src/app/dto/pagination.dto'
 
 @ApiTags("Card")
 @ApiBearerAuth()
@@ -66,5 +69,15 @@ export class CardController {
     @Body() body: CardParamDTO
   ) {
     await this.cardService.terminateCard(res, body, req.user)
+  }
+
+  @Get('/list/:businessId')
+  async fetchCards(
+    @Res() res: Response,
+    @Req() req: IRequest,
+    @Query() query: InfiniteScrollDTO,
+    @Param('businessId') businessId: string,
+  ) {
+    await this.cardService.fetchCards(res, businessId, req.user, query)
   }
 }
