@@ -40,7 +40,7 @@ export class CardService {
         const ref = `${Date.now()}_${businessId}`
 
         const { data } = await this.bitnob.createCard({
-            amount: 0,
+            amount: 300,
             reference: ref,
             cardBrand: 'visa',
             cardType: 'virtual',
