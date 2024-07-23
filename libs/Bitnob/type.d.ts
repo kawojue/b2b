@@ -68,8 +68,8 @@ interface CardResponse {
 }
 
 interface VirtualCardEvent {
-    event: 'virtualcard.transaction.declined.terminated' | 'virtualcard.created.success'
-    data: VirtualCardTerminationData | VirtualCardSuccessData
+    event: 'virtualcard.transaction.declined.terminated' | 'virtualcard.created.success' | 'virtualcard.user.kyc.failed'
+    data: VirtualCardTerminationData | VirtualCardSuccessData | VirtualCardKyc
 }
 
 interface VirtualCardTerminationData {
@@ -133,4 +133,13 @@ interface UserCardRegistrationResponse {
         cardBrand: string
         kycPassed: boolean
     }
+}
+
+interface VirtualCardKyc {
+    id: string
+    reason?: string
+    companyId: string
+    kycPassed: boolean
+    customerId: string
+    customerEmail: string
 }

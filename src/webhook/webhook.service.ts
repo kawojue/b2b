@@ -64,6 +64,17 @@ export class WebhookService {
                 })
                 await this.triggerWebhook(body.event, businessId, cardTerminationData)
                 break
+            case 'virtualcard.created.failed':
+            case 'virtualcard.created.success':
+                const kycData = body.data as VirtualCardKyc
+                const customer = await this.prisma.customer.findFirst({
+                    where: { email: kycData.customerEmail }
+                })
+                await this.prisma.customer.update({
+                    where: { id: customer.id },
+                    data: { kycPassed: kycData.kycPassed }
+                })
+                break
             default:
                 break
         }

@@ -50,6 +50,7 @@ CREATE TABLE "Customer" (
     "bvn" TEXT,
     "idImage" TEXT,
     "dob" TEXT,
+    "kycPassed" BOOLEAN NOT NULL DEFAULT false,
     "updatedAt" TIMESTAMP(3) NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "businessId" UUID NOT NULL,

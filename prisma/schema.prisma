@@ -51,6 +51,7 @@ model Customer {
   bvn       String?
   idImage   String?
   dob       String?
+  kycPassed Boolean  @default(false)
   cards     Card[]
   updatedAt DateTime @updatedAt
   createdAt DateTime @default(now())

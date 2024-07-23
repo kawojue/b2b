@@ -101,4 +101,9 @@ export class RegisterCustomerDTO {
         example: '' // Base64
     })
     userPhoto?: string
+
+    @ApiProperty({
+        example: '2003-09-10'
+    })
+    dob: string
 }

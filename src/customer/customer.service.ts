@@ -24,6 +24,7 @@ export class CustomerService {
         businessId: string,
         { sub }: ExpressUser,
         {
+            dob,
             bvn,
             city,
             country,
@@ -60,12 +61,13 @@ export class CustomerService {
             throw new ConflictException("There is an existing customer in this business")
         }
 
-        const registerUser = await this.bitnob.registerCardUser({
+        await this.bitnob.registerCardUser({
             customerEmail: email,
             firstName: firstname,
             lastName: lastname,
             houseNumber: houseNo,
             phoneNumber: phone,
+            dateOfBirth: dob,
             idType,
             idNumber,
             zipCode,
