@@ -51,6 +51,7 @@ export class WebhookController {
 
     try {
       await this.webhookService.enqueueRequest(req)
+      console.log(req.body)
     } catch (err) {
       console.error(err)
       throw new InternalServerErrorException()

@@ -43,15 +43,26 @@ export class WebhookService {
     async handleEvent(req: Request) {
         const body = req.body as VirtualCardEvent
 
-        const businessId = body.data.reference.split('_')[1]
 
         switch (body.event) {
             case 'virtualcard.created.success':
                 const cardCreatedSuccessData = body.data as VirtualCardSuccessData
-                await this.triggerWebhook(body.event, businessId, cardCreatedSuccessData)
+                await this.triggerWebhook(body.event, body.data.reference.split('_')[1], cardCreatedSuccessData)
                 break
             case 'virtualcard.transaction.declined.terminated':
                 const cardTerminationData = body.data as VirtualCardTerminationData
+                const { customer: { businessId } } = await this.prisma.card.findUnique({
+                    where: {
+                        cardId: cardTerminationData.cardId,
+                    },
+                    select: {
+                        customer: {
+                            select: {
+                                businessId: true
+                            }
+                        }
+                    }
+                })
                 await this.triggerWebhook(body.event, businessId, cardTerminationData)
                 break
             default:
