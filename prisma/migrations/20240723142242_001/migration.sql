@@ -7,7 +7,6 @@ CREATE TABLE "User" (
     "name" TEXT NOT NULL,
     "email" TEXT NOT NULL,
     "password" TEXT NOT NULL,
-    "refresh_token" TEXT,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT "User_pkey" PRIMARY KEY ("id")
@@ -71,7 +70,7 @@ CREATE TABLE "Webhook" (
 CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
 
 -- CreateIndex
-CREATE INDEX "User_name_refresh_token_idx" ON "User"("name", "refresh_token");
+CREATE INDEX "User_name_idx" ON "User"("name");
 
 -- CreateIndex
 CREATE INDEX "Business_name_idx" ON "Business"("name");

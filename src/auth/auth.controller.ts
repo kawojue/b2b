@@ -6,8 +6,8 @@ import {
   HttpCode,
   Controller,
 } from '@nestjs/common'
+import { Response } from 'express'
 import { ApiTags } from '@nestjs/swagger'
-import { Request, Response } from 'express'
 import { AuthService } from './auth.service'
 import { AuthDTO, RegisterUserDTO } from './dto/index.dto'
 
@@ -25,10 +25,5 @@ export class AuthController {
   @Post('/login')
   async login(@Res() res: Response, @Body() body: AuthDTO) {
     await this.authService.login(res, body)
-  }
-
-  @Post('refresh-token')
-  async refreshAccessToken(@Res() res: Response, @Req() req: Request) {
-    await this.authService.refreshAccessToken(req, res)
   }
 }

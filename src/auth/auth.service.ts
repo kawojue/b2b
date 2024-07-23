@@ -58,22 +58,7 @@ export class AuthService {
 
         const payload = { sub: user.id } as JwtPayload
 
-        const [access_token, refresh_token] = await Promise.all([
-            this.misc.generateAccessToken(payload),
-            this.misc.generateRefreshToken(payload)
-        ])
-
-        await this.prisma.user.update({
-            where: { id: user.id },
-            data: { refresh_token }
-        })
-
-        res.cookie('refresh_token', refresh_token, {
-            httpOnly: true,
-            sameSite: this.isProduction ? 'none' : 'lax',
-            secure: this.isProduction,
-            maxAge: 60 * 60 * 24 * 60 * 1000,
-        })
+        const access_token = this.misc.generateAccessToken(payload)
 
         this.response.sendSuccess(res, StatusCodes.OK, {
             access_token, data: {
@@ -81,23 +66,5 @@ export class AuthService {
                 email: user.email,
             }
         })
-    }
-
-    async refreshAccessToken(req: Request, res: Response) {
-        try {
-            const refreshToken = req.cookies.refresh_token
-
-            if (!refreshToken) {
-                return this.response.sendError(res, StatusCodes.BadRequest, "Refresh token not found")
-            }
-
-            const newAccessToken = await this.misc.generateNewAccessToken(refreshToken)
-
-            this.response.sendSuccess(res, StatusCodes.OK, {
-                access_token: newAccessToken
-            })
-        } catch (err) {
-            return this.response.sendError(res, StatusCodes.Unauthorized, "Invalid refresh token")
-        }
     }
 }

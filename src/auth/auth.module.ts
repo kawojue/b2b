@@ -13,7 +13,7 @@ import { EncryptionService } from 'libs/encryption.service'
   imports: [
     JwtModule.register({
       secret: process.env.JWT_SECRET,
-      signOptions: { expiresIn: '30m' },
+      signOptions: { expiresIn: '30d' },
     }),
     PassportModule.register({ defaultStrategy: 'jwt' }),
   ],

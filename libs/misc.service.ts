@@ -18,28 +18,8 @@ export class MiscService {
 
     async generateAccessToken({ sub }: JwtPayload): Promise<string> {
         return await this.jwtService.signAsync({ sub }, {
-            expiresIn: '30m',
+            expiresIn: '30d',
             secret: process.env.JWT_SECRET,
         })
-    }
-
-    async generateRefreshToken({ sub }: JwtPayload): Promise<string> {
-        return await this.jwtService.signAsync({ sub }, {
-            expiresIn: '60d',
-            secret: process.env.JWT_SECRET,
-        })
-    }
-
-    async generateNewAccessToken(refreshToken: string): Promise<string> {
-        try {
-            const decoded = await this.jwtService.verifyAsync(refreshToken, {
-                secret: process.env.JWT_SECRET,
-                ignoreExpiration: false,
-            }) as JwtDecoded
-
-            return await this.generateAccessToken(decoded)
-        } catch (err) {
-            throw err
-        }
     }
 }
