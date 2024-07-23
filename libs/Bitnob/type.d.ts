@@ -23,8 +23,8 @@ interface CardCreationResponse {
         id: string
         createdAt: string
         updatedAt: string
-        cardType: string
-        cardBrand: string
+        cardType: CardType
+        cardBrand: CardBrand
         cardUserId: string
         reference: string
         createdStatus: string
@@ -48,8 +48,8 @@ interface CardData {
     cardNumber: string
     last4: string
     cardName: string
-    cardType: string
-    cardBrand: string
+    cardType: CardType
+    cardBrand: CardBrand
     cvv2: string
     expiry: string
     valid: string
@@ -130,7 +130,7 @@ interface UserCardRegistrationResponse {
         houseNumber: string
         dateOfBirth: string
         idImage: string
-        cardBrand: string
+        cardBrand: CardBrand
         kycPassed: boolean
     }
 }

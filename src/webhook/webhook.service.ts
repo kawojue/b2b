@@ -5,11 +5,13 @@ import { Request, Response } from 'express'
 import { StatusCodes } from 'enums/statusCodes'
 import { PrismaService } from 'prisma/prisma.service'
 import { ResponseService } from 'libs/response.service'
+import { BitnobService } from 'libs/Bitnob/bitnob.service'
 import { Injectable, NotFoundException } from '@nestjs/common'
 
 @Injectable()
 export class WebhookService {
     constructor(
+        private readonly bitnot: BitnobService,
         private readonly prisma: PrismaService,
         private readonly httpService: HttpService,
         private readonly response: ResponseService,
@@ -46,22 +48,55 @@ export class WebhookService {
         switch (body.event) {
             case 'virtualcard.created.success':
                 const cardCreatedSuccessData = body.data as VirtualCardSuccessData
-                await this.triggerWebhook(body.event, body.data.reference.split('_')[1], cardCreatedSuccessData)
+                const ref = cardCreatedSuccessData.reference
+
+                const { data: card } = await this.bitnot.fetchCard({ cardId: cardCreatedSuccessData.id })
+
+                await Promise.all([
+                    this.prisma.card.update({
+                        where: { reference: cardCreatedSuccessData.reference },
+                        data: {
+                            cvv: card.id,
+                            status: card.status,
+                            balance: card.balance,
+                            last4: card.last4,
+                            cardBrand: card.cardBrand,
+                            cardName: card.cardName,
+                            cardNumber: card.cardNumber,
+                            reference: card.reference,
+                            valid: card.valid,
+                            cardType: card.cardType,
+                            expiry: card.expiry,
+                            cardId: card.id,
+                            billingAddress: card.billingAddress as any,
+                        }
+                    }),
+                    this.triggerWebhook(body.event, ref.split('_')[1], cardCreatedSuccessData)
+                ])
                 break
             case 'virtualcard.transaction.declined.terminated':
                 const cardTerminationData = body.data as VirtualCardTerminationData
-                const { customer: { businessId } } = await this.prisma.card.findUnique({
-                    where: {
-                        cardId: cardTerminationData.cardId,
-                    },
-                    select: {
-                        customer: {
-                            select: {
-                                businessId: true
+                const [{ customer: { businessId } }] = await this.prisma.$transaction([
+                    this.prisma.card.findUnique({
+                        where: {
+                            cardId: cardTerminationData.cardId,
+                        },
+                        select: {
+                            customer: {
+                                select: {
+                                    businessId: true
+                                }
                             }
                         }
-                    }
-                })
+                    }),
+                    this.prisma.card.update({
+                        where: {
+                            cardId: cardTerminationData.cardId,
+                        },
+                        data: { status: 'terminated' }
+                    })
+                ])
+
                 await this.triggerWebhook(body.event, businessId, cardTerminationData)
                 break
             case 'virtualcard.created.failed':
