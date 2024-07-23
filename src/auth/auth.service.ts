@@ -58,10 +58,11 @@ export class AuthService {
 
         const payload = { sub: user.id } as JwtPayload
 
-        const access_token = this.misc.generateAccessToken(payload)
+        const access_token = await this.misc.generateAccessToken(payload)
 
         this.response.sendSuccess(res, StatusCodes.OK, {
-            access_token, data: {
+            access_token,
+            data: {
                 name: user.name,
                 email: user.email,
             }
