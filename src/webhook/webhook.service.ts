@@ -41,8 +41,7 @@ export class WebhookService {
     }
 
     async handleEvent(req: Request) {
-        const body = req.body as VirtualCardEvent
-
+        const body = req.body
 
         switch (body.event) {
             case 'virtualcard.created.success':

@@ -9,6 +9,10 @@ export class BitnobService {
         this.consumer = new Consumer('https://sandboxapi.bitnob.co/api/v1', process.env.BITNOT_API_KEY)
     }
 
+    registerCardUser(data: UserCardRegistrationData) {
+        return this.consumer.sendRequest<UserCardRegistrationResponse>('POST', '/virtualcards/registercarduser', data)
+    }
+
     createCard(data: CardCreationData) {
         return this.consumer.sendRequest<CardCreationResponse>('POST', '/virtualcards/create', data)
     }

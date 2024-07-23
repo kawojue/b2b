@@ -88,6 +88,25 @@ interface VirtualCardSuccessData {
     createdStatus: string
 }
 
+interface UserCardRegistrationData {
+    dateOfBirth?: string
+    customerEmail: string
+    idNumber?: string
+    idType?: string
+    firstName: string
+    lastName: string
+    phoneNumber?: string
+    city?: string
+    state?: string
+    country?: string
+    zipCode?: string
+    line1?: string
+    houseNumber?: string
+    idImage?: string
+    bvn?: string
+    userPhoto?: string
+}
+
 interface UserCardRegistrationResponse {
     status: boolean
     message: string

@@ -5,6 +5,7 @@ import { CustomerService } from './customer.service'
 import { PrismaService } from 'prisma/prisma.service'
 import { ResponseService } from 'libs/response.service'
 import { CustomerController } from './customer.controller'
+import { BitnobService } from 'libs/Bitnob/bitnob.service'
 
 @Module({
   controllers: [CustomerController],
@@ -12,6 +13,7 @@ import { CustomerController } from './customer.controller'
     CustomerService,
     JwtService,
     MiscService,
+    BitnobService,
     PrismaService,
     ResponseService
   ],

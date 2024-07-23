@@ -9,10 +9,12 @@ import { PrismaService } from 'prisma/prisma.service'
 import { RegisterCustomerDTO } from './dto/index.dto'
 import { ResponseService } from 'libs/response.service'
 import { InfiniteScrollDTO } from 'src/app/dto/pagination.dto'
+import { BitnobService } from 'libs/Bitnob/bitnob.service'
 
 @Injectable()
 export class CustomerService {
     constructor(
+        private readonly bitnob: BitnobService,
         private readonly prisma: PrismaService,
         private readonly response: ResponseService,
     ) { }
@@ -21,7 +23,23 @@ export class CustomerService {
         res: Response,
         businessId: string,
         { sub }: ExpressUser,
-        { firstname, lastname, email }: RegisterCustomerDTO,
+        {
+            bvn,
+            city,
+            country,
+            zipCode,
+            state,
+            phone,
+            houseNo,
+            line1,
+            idType,
+            idNumber,
+            idImage,
+            email,
+            lastname,
+            firstname,
+            userPhoto
+        }: RegisterCustomerDTO,
     ) {
         const business = await this.prisma.business.findUnique({
             where: {
@@ -42,9 +60,30 @@ export class CustomerService {
             throw new ConflictException("There is an existing customer in this business")
         }
 
+        const registerUser = await this.bitnob.registerCardUser({
+            customerEmail: email,
+            firstName: firstname,
+            lastName: lastname,
+            houseNumber: houseNo,
+            phoneNumber: phone,
+            idType,
+            idNumber,
+            zipCode,
+            city,
+            country,
+            line1,
+            bvn,
+            userPhoto,
+            idImage,
+            state,
+        })
+
         const newCustomer = await this.prisma.customer.create({
             data: {
-                firstname, lastname, email,
+                idNumber, idImage, idType,
+                email, bvn, city, zipCode,
+                userPhoto, firstname, lastname,
+                phone, state, country, line1, houseNo,
                 business: { connect: { id: businessId } }
             }
         })

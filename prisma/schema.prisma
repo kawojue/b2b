@@ -49,6 +49,7 @@ model Customer {
   line1     String?
   houseNo   String?
   bvn       String?
+  idImage   String?
   dob       String?
   cards     Card[]
   updatedAt DateTime @updatedAt
