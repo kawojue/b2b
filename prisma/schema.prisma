@@ -1,0 +1,82 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URI")
+}
+
+model User {
+  id            String   @id @default(uuid()) @db.Uuid
+  name          String
+  email         String   @unique
+  password      String
+  refresh_token String?
+  createdAt     DateTime @default(now())
+
+  businesses Business[]
+
+  @@index([name, refresh_token])
+}
+
+model Business {
+  id        String   @id @default(uuid()) @db.Uuid
+  name      String
+  createdAt DateTime @default(now())
+
+  webhook   Webhook?
+  customers Customer[]
+
+  owner   User   @relation(references: [id], fields: [ownerId], onDelete: Cascade)
+  ownerId String @db.Uuid
+
+  @@index([name])
+}
+
+model Customer {
+  id        String   @id @default(uuid()) @db.Uuid
+  firstname String
+  lastname  String
+  cards     Card[]
+  createdAt DateTime @default(now())
+
+  business   Business @relation(references: [id], fields: [businessId], onDelete: Cascade)
+  businessId String   @db.Uuid
+
+  @@index([firstname, lastname])
+}
+
+model Card {
+  id             String     @id @default(uuid()) @db.Uuid
+  cardName       String
+  cardNumber     String
+  last4          String
+  cardType       String
+  cardBrand      String
+  expiry         String
+  cvv            String
+  valid          String
+  reference      String     @unique
+  billingAddress Json?
+  balance        Float      @default(0.00)
+  status         CardStatus @default(ACTIVE)
+  createdAt      DateTime   @default(now())
+  updatedAt      DateTime   @updatedAt
+
+  customer   Customer @relation(references: [id], fields: [customerId], onDelete: Cascade)
+  customerId String   @db.Uuid
+}
+
+model Webhook {
+  id  Int    @id @default(autoincrement())
+  url String
+
+  businessId String   @unique @db.Uuid
+  business   Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
+}
+
+enum CardStatus {
+  ACTIVE
+  FREEZE
+}
