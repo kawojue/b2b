@@ -1,3 +1,4 @@
+import * as crypto from 'crypto'
 import { Response } from 'express'
 import { lastValueFrom } from 'rxjs'
 import { HttpService } from '@nestjs/axios'
@@ -49,7 +50,16 @@ export class WebhookService {
         })
 
         if (webhook && webhook.url) {
-            await lastValueFrom(this.httpService.post(webhook.url, { event, data }))
+            const secret = webhook.businessId // not a secret though
+            const hash = crypto.createHmac('sha256', secret)
+                .update(JSON.stringify(data))
+                .digest('hex')
+
+            await lastValueFrom(this.httpService.post(webhook.url, { event, data }, {
+                headers: {
+                    'webhook-signature': hash
+                }
+            }))
         }
     }
 }

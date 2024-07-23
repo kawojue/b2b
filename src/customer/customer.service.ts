@@ -1,9 +1,13 @@
+import {
+    Injectable,
+    NotFoundException,
+    ConflictException,
+} from '@nestjs/common'
 import { Response } from 'express'
 import { StatusCodes } from 'enums/statusCodes'
 import { PrismaService } from 'prisma/prisma.service'
 import { RegisterCustomerDTO } from './dto/index.dto'
 import { ResponseService } from 'libs/response.service'
-import { Injectable, NotFoundException } from '@nestjs/common'
 import { InfiniteScrollDTO } from 'src/app/dto/pagination.dto'
 
 @Injectable()
@@ -17,7 +21,7 @@ export class CustomerService {
         res: Response,
         businessId: string,
         { sub }: ExpressUser,
-        { firstname, lastname }: RegisterCustomerDTO,
+        { firstname, lastname, email }: RegisterCustomerDTO,
     ) {
         const business = await this.prisma.business.findUnique({
             where: {
@@ -30,14 +34,22 @@ export class CustomerService {
             throw new NotFoundException("Business not found")
         }
 
-        const customer = await this.prisma.customer.create({
+        const customer = await this.prisma.customer.findUnique({
+            where: { businessId, email }
+        })
+
+        if (customer) {
+            throw new ConflictException("There is an existing customer in this business")
+        }
+
+        const newCustomer = await this.prisma.customer.create({
             data: {
-                firstname, lastname,
+                firstname, lastname, email,
                 business: { connect: { id: businessId } }
             }
         })
 
-        this.response.sendSuccess(res, StatusCodes.OK, { data: customer })
+        this.response.sendSuccess(res, StatusCodes.OK, { data: newCustomer })
     }
 
     async fetchCustomers(

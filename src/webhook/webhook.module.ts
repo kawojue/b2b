@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common'
+import { JwtService } from '@nestjs/jwt'
 import { HttpModule } from '@nestjs/axios'
 import { WebhookService } from './webhook.service'
 import { PrismaService } from 'prisma/prisma.service'
@@ -10,8 +11,9 @@ import { WebhookController } from './webhook.controller'
   controllers: [WebhookController],
   providers: [
     WebhookService,
-    PrismaService,
     ResponseService,
+    PrismaService,
+    JwtService,
   ],
 })
 export class WebhookModule { }

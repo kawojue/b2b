@@ -38,29 +38,31 @@ model Customer {
   id        String   @id @default(uuid()) @db.Uuid
   firstname String
   lastname  String
+  email     String   @unique
   cards     Card[]
   createdAt DateTime @default(now())
 
   business   Business @relation(references: [id], fields: [businessId], onDelete: Cascade)
   businessId String   @db.Uuid
 
-  @@index([firstname, lastname])
+  @@index([firstname, lastname, email])
 }
 
 model Card {
   id             String     @id @default(uuid()) @db.Uuid
-  cardName       String
-  cardNumber     String
-  last4          String
-  cardType       String
-  cardBrand      String
-  expiry         String
-  cvv            String
-  valid          String
+  cardId         String?    @unique
+  cardName       String?
+  cardNumber     String?
+  last4          String?
+  cardType       String?
+  cardBrand      String?
+  expiry         String?
+  cvv            String?
+  valid          String?
   reference      String     @unique
   billingAddress Json?
   balance        Float      @default(0.00)
-  status         CardStatus @default(ACTIVE)
+  status         CardStatus @default(pending)
   createdAt      DateTime   @default(now())
   updatedAt      DateTime   @updatedAt
 
@@ -77,6 +79,8 @@ model Webhook {
 }
 
 enum CardStatus {
-  ACTIVE
-  FREEZE
+  active
+  frozen
+  pending
+  terminated
 }

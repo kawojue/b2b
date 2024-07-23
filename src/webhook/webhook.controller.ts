@@ -6,8 +6,9 @@ import {
   Param,
   UseGuards,
   Controller,
+  BadRequestException,
 } from '@nestjs/common'
-import { Response } from 'express'
+import { Request, Response } from 'express'
 import { WebhookService } from './webhook.service'
 import { RegisterWebhookDTO } from './dto/index.dto'
 import { JwtAuthGuard } from 'src/jwt/jwt-auth.guard'
@@ -28,5 +29,14 @@ export class WebhookController {
     @Param('businessId') businessId: string
   ) {
     await this.webhookService.registerWebhook(url, res, businessId, req.user)
+  }
+
+  @Post('/trigger')
+  async receiveWebhook(@Req() req: Request) {
+    if (!req.body || !req.body?.event || !req.body?.data) {
+      throw new BadRequestException('Invalid request body received')
+    }
+
+
   }
 }
