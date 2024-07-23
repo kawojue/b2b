@@ -5,6 +5,7 @@ import {
   Body,
   Param,
   Patch,
+  Delete,
   UseGuards,
   Controller,
 } from '@nestjs/common'
@@ -28,6 +29,15 @@ export class CardController {
     @Param('customerId') customerId: string,
   ) {
     await this.cardService.createCard(res, businessId, customerId, req.user)
+  }
+
+  @Delete('remove')
+  async removeCard(
+    @Res() res: Response,
+    @Req() req: IRequest,
+    @Body() body: CardParamDTO
+  ) {
+    await this.cardService.removeCard(res, body, req.user)
   }
 
   @Post('freeze')

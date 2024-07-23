@@ -65,6 +65,43 @@ export class CardService {
         this.response.sendSuccess(res, StatusCodes.OK, { data: card })
     }
 
+    async removeCard(
+        res: Response,
+        {
+            cardId,
+            customerId,
+            businessId,
+        }: CardParamDTO,
+        { sub }: ExpressUser,
+    ) {
+        const card = await this.prisma.card.findUnique({
+            where: {
+                id: cardId,
+                customer: {
+                    business: {
+                        ownerId: sub,
+                        id: businessId,
+                    },
+                    id: customerId,
+                }
+            }
+        })
+
+        if (!card) {
+            return this.response.sendError(res, StatusCodes.NotFound, "Virtual Card not found")
+        }
+
+        await this.bitnob.terminateCard({ cardId: card.cardId })
+
+        await this.prisma.card.delete({
+            where: { id: cardId }
+        })
+
+        this.response.sendSuccess(res, StatusCodes.OK, {
+            message: "Card removed"
+        })
+    }
+
     async freezeCard(
         res: Response,
         {
