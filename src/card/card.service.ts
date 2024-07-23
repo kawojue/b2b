@@ -42,8 +42,8 @@ export class CardService {
         const { data } = await this.bitnob.createCard({
             amount: 300,
             reference: ref,
+            cardBrand: 'visa',
             cardType: 'virtual',
-            cardBrand: 'mastercard',
             lastName: customer.lastname,
             customerEmail: customer.email,
             firstName: customer.firstname,
