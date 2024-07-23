@@ -7,13 +7,13 @@ interface CardParam {
 }
 
 interface CardCreationData {
-    cardBrand: CardBrand
-    cardType: CardType
-    amount: number
+    cardBrand?: CardBrand
+    cardType?: CardType
+    amount?: number
     reference: string
     firstName?: string
     lastName?: string
-    customerEmail: string
+    customerEmail?: string
 }
 
 interface CardCreationResponse {
@@ -86,4 +86,32 @@ interface VirtualCardSuccessData {
     companyId: string
     reference: string
     createdStatus: string
+}
+
+interface UserCardRegistrationResponse {
+    status: boolean
+    message: string
+    data: {
+        id: string
+        createdAt: string
+        updatedAt: string
+        customerEmail: string
+        firstName: string
+        idNumber: string
+        idType: string
+        lastName: string
+        phoneNumber: string
+        userPhoto: string
+        customerId: string
+        line1: string
+        city: string
+        state: string
+        zipCode: string
+        country: string
+        houseNumber: string
+        dateOfBirth: string
+        idImage: string
+        cardBrand: string
+        kycPassed: boolean
+    }
 }

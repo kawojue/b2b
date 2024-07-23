@@ -34,7 +34,7 @@ export class CustomerService {
             throw new NotFoundException("Business not found")
         }
 
-        const customer = await this.prisma.customer.findUnique({
+        const customer = await this.prisma.customer.findFirst({
             where: { businessId, email }
         })
 

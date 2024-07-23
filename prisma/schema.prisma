@@ -37,8 +37,21 @@ model Customer {
   id        String   @id @default(uuid()) @db.Uuid
   firstname String
   lastname  String
-  email     String   @unique
+  email     String
+  phone     String?
+  idNumber  String?
+  idType    IDType?
+  userPhoto String?
+  city      String?
+  state     String?
+  country   String?
+  zipCode   String?
+  line1     String?
+  houseNo   String?
+  bvn       String?
+  dob       String?
   cards     Card[]
+  updatedAt DateTime @updatedAt
   createdAt DateTime @default(now())
 
   business   Business @relation(references: [id], fields: [businessId], onDelete: Cascade)
@@ -53,8 +66,8 @@ model Card {
   cardName       String?
   cardNumber     String?
   last4          String?
-  cardType       String?
-  cardBrand      String?
+  cardType       CardType?
+  cardBrand      CardBrand?
   expiry         String?
   cvv            String?
   valid          String?
@@ -82,4 +95,20 @@ enum CardStatus {
   frozen
   pending
   terminated
+}
+
+enum CardType {
+  virtual
+  giftcard
+}
+
+enum CardBrand {
+  visa
+  mastercard
+}
+
+enum IDType {
+  NIN
+  BVN
+  PASSPORT
 }
