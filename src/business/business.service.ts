@@ -49,7 +49,7 @@ export class BusinessService {
       lte: endDate !== '' ? new Date(endDate) : new Date(),
     }
 
-    const [businesses, total] = await this.prisma.$transaction([
+    const [businesses, total] = await Promise.all([
       this.prisma.business.findMany({
         where: {
           ownerId: sub,

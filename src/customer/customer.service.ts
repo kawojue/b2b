@@ -119,7 +119,7 @@ export class CustomerService {
             lte: endDate !== '' ? new Date(endDate) : new Date(),
         }
 
-        const [customers, total] = await this.prisma.$transaction([
+        const [customers, total] = await Promise.all([
             this.prisma.customer.findMany({
                 where: {
                     business: {

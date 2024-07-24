@@ -256,7 +256,7 @@ export class CardService {
             lte: endDate !== '' ? new Date(endDate) : new Date(),
         }
 
-        const [cards, total] = await this.prisma.$transaction([
+        const [cards, total] = await Promise.all([
             this.prisma.card.findMany({
                 where: {
                     createdAt: dateFilter,

@@ -99,8 +99,8 @@ export class WebhookService {
 
                 await this.triggerWebhook(body.event, businessId, cardTerminationData)
                 break
-            case 'virtualcard.created.failed':
-            case 'virtualcard.created.success':
+            case 'virtualcard.user.kyc.success':
+            case 'virtualcard.user.kyc.failed':
                 const kycData = body.data as VirtualCardKyc
                 const customer = await this.prisma.customer.findFirst({
                     where: { email: kycData.customerEmail }
